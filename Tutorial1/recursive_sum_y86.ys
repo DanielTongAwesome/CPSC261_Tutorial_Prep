@@ -1,0 +1,53 @@
+
+
+# Tutorial #1 Question 3 - Recursive Sum Convert to Y86
+
+int rsum(int *start, int count) {
+    if (count <= 0) {
+        return 0;
+    }
+    return *start + rsum(start + 1, count - 1)
+}
+
+
+# Y86 instruction
+
+# we have no array in y86, so to represent the arry we use stack
+
+# variables: %rdi -- *start
+#            %rsi -- count
+#            %rax -- Sum
+
+.pos 0x100
+main:   irmovq  send, %rsp      # initialize stack pointer
+        irmovq  a, %rdi         # initialize start
+        irmovq  0x6, %rsi       # initlalize count
+        call    rsum
+        halt
+
+rsum:   xorq    %rax, %rax      # set sum = 0
+        andq    %rsi, %rsi      # if (esi <= 0)
+        jle     done            # done
+        pushq   %rbx            # save old %ebx value
+        mrmovq  (%rdi), %rbx    # get current element
+        irmovq  $0x1, %rcx      # count = count - 1
+        subq    %rcx, %rsi
+        irmovq  $0x8, %rcx      # start = start + 1
+        addq    %rcx, %rdi
+        call rsum               # call rsum(start+1, count-1)
+        addq    %rbx, %rax      # add current element to sum
+        popq    %rbx            # restore old %ebx
+done:   ret
+
+# constants
+.pos 0x1000
+a:      .quad   4
+        .quad   7
+        .quad   8
+        .quad   9
+        .quad   12
+        .quad   11
+aend:   .quad   0
+
+stack:  .quad   0,  0x200
+send:   .quad   0

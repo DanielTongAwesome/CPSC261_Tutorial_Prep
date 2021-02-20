@@ -1,0 +1,38 @@
+
+# Tutorial #1 Question 1 - Absolute Sum
+
+# rax  --  Sum
+# rbx  --  value of array(*a)
+# rdx  --  address of array(a)
+
+.pos 0x100  # execution begins at address 0x100 (virtual address)
+sum:    irmovq  a, %rdx         # rdx = a -> points to the begining of the array
+        xorq    %rax, %rax      # sum = 0  
+
+L2:     mrmovq  (%rdx), %rbx    # rbx = *a
+
+        # solution code here
+        # introduce rcx
+        xorq    %rcx, %rcx      # set rcx = 0
+        subq    %rbx, %rcx      # rcx = 0 - *a
+        cmovg   %rcx, %rbx      # if rxc > 0: assign rbx = rcx otherwise pass
+        # solution code end  
+
+        addq    %rbx, %rax      # sum = sum + rbx -> sum = sum + *a
+        irmovq  $8, %rbx        # rbx = 8 
+        addq    %rbx, %rdx      # a = a + 8, increment address pointer a by 8 bytes
+        irmovq  aend, %rbx      # rbx = the last address of the array
+        subq    %rdx, %rbx      # rbx = rbx - a 
+        jne     L2              # if = 0 then finish else back to L2
+        ret
+
+.pos 0x1000 # assign one virtual address for array a
+a:      .quad   4   # address 0x1000
+        .quad   7   # address + 8-byte
+        .quad   8
+        .quad   9
+        .quad   12
+        .quad   11
+aend:   .quad   0   
+
+ 

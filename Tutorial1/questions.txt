@@ -1,0 +1,15 @@
+1. difference between Y86 and X86:
+
+    Y86 simplifed version
+
+2. R register and E register
+
+    R - 64-bit / 8 byte resiger
+    E - lower 32 bits of R register
+
+3. .pos meaning preprocessor directive
+
+    program execution starts from position ...
+
+4.  word - 2-byte
+    .quad - 8-byte data

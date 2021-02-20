@@ -1,0 +1,33 @@
+
+
+# Tutorial #2 Question 1 - Convert Instruction to In-memory Representation
+
+.pos 0x0
+    irmovq  Stack, %rsp
+    # 30 F4 60 00 00 00 00 00 00 00 
+    irmovq  rtnp, %rax                      #  Note 1: rtnp - 0x38                      
+    # 30 F0 38 00 00 00 00 00 00 00            10 + 10 + 2 + 2 + 9 + 10  + 1 + 1 + 11 = 56
+    pushq   %rax
+    # A0 0F
+    xorq    %rax, %rax
+    # 63 00
+    jne     target                          #  Note 2: target - 0x2C
+    # 74 2C 00 00 00 00 00 00 00
+    irmovq  $1, %rax
+    # 30 F0 01 00 00 00 00 00 00 00
+    halt
+    # 00
+target: ret
+    # 90
+    irmovq  $2, %rbx
+    # 30 F3 02 00 00 00 00 00 00 00
+    halt
+    # 00
+rtnp:   irmovq  $3, %rdx
+    # 30 F2 03 00 00 00 00 00 00 00
+        halt
+    # 00
+
+
+.pos 0x60
+Stack: # stack is 0x60

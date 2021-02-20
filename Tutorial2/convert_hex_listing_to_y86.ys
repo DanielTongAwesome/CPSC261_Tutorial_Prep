@@ -1,0 +1,25 @@
+
+
+# Tutorial #2 Question 2 - Convert In-memory Representation to Instructions
+
+
+.pos 0x100
+    irmovq  $0x1000, %rbx
+    mrmovq  0x0(%rbx), %rbx
+    irmovq  $0x1008, %rcx
+    mrmovq  0x0(%rcx), %rcx
+    irmovq  $0x80000000, %rax
+    irmovq  $0x4, %rdi
+    irmovq  $0x1, %rdx
+    subq    %rdx, %rcx
+    jl      0x175
+    mrmovq  0x0(%rbx), %rdx
+    addq    %rdi, %%rbx
+    rrmovq  %rdx, %rsi
+    subq    %rax, %rsi
+    jle     0x13c
+    rrmovq  %rdx, %rax
+    jmp     0x13c
+    irmovq  $0x1010, %rbx
+    rmmovq  %rax, 0x0(%rbx)
+    halt
