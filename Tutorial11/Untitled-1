@@ -1,0 +1,48 @@
+/*
+ * @Author: Zitian(Daniel) Tong
+ * @Date: 2021-04-03 22:39:55
+ * @LastEditTime: 2021-04-05 02:41:23
+ * @LastEditors: Zitian(Daniel) Tong
+ * @Description: 
+ * @FilePath: /undefined/Users/danieltongawesome/Desktop/TA Documentation/CPSC 261/Tutorial/Tutorial11/Untitled-1
+ */
+
+
+/*
+    a sem to act as a mutex -> lock: initalized to 1
+    a sem to act as hasBeer conditional variable -> hasBeer: initlized to 0
+    a sem to act as isEmpty conditional variable -> isEmpty: initlized to 1
+*/
+
+void pour(){
+    // step 1 - check hasBeer 
+    sem_wait(&hasBeer);
+    // step 2 - acquire the access
+    sem_wait(&lock);
+    // step 3 - operation
+    glasses--;
+    // step 4 - notify the refill that there is no more beer
+    if ( glasses == 0){
+        sem_post(&isEmpty);
+    }
+    // last step - release the access
+    sem_post(&lock);
+}
+
+
+void refill(){
+    // step 1 - check isEmpty
+    sem_wait(&isEmpty);
+    // step 2 - acquire the access
+    sem_wait(&lock);
+    // step 3 - operation
+    glasses += capacity;
+    // last step - release the access
+    sem_post(&lock);
+    // accumulate the hasBeer 
+    for (int i = 0; i < capacity; i++){
+        sem_post(&hasBeer);
+    }
+}
+
+
